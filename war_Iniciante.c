@@ -9,7 +9,7 @@
 
 
 //---Definições de constantes---//
-#define MAX_TERRITORIOS 2
+#define MAX_TERRITORIOS 5
 #define TAM_STRING 10
 
 // Definições de cores de texto (Foreground)
@@ -81,6 +81,7 @@ int main() {
         else if (strcmp(corTemp, "amarelo") == 0) cor_formatacao = ANSI_COLOR_YELLOW;
         else if (strcmp(corTemp, "magenta") == 0) cor_formatacao = ANSI_COLOR_MAGENTA;
         else if (strcmp(corTemp, "ciano") == 0) cor_formatacao = ANSI_COLOR_CYAN;
+        else cor_formatacao = ANSI_COLOR_RESET;
 
         printf("\nTERRITÓRIO %d:\n", i + 1);
         printf("  -Nome: %s%s%s\n",cor_formatacao, lista_Territorios[i].nome, ANSI_COLOR_RESET);
