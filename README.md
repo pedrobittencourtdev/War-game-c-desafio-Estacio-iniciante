@@ -27,8 +27,8 @@ Se você quiser testar este sistema na sua máquina, siga os passos abaixo:
 
 1. **Clone o repositório:**
    ```bash
-  https://github.com/pedrobittencourtdev/War-game-c-desafio-Estacio-iniciante.git
+   https://github.com/pedrobittencourtdev/War-game-c-desafio-Estacio-iniciante.git
 
 2. **Entre no terminal e na pasta:**
-   '''bash
-   cd nome-da-pasta
+ ```bash
+      cd nome-da-pasta
