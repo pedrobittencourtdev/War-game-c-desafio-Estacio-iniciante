@@ -58,7 +58,7 @@ const char* obterCodigoCor(char* corExército, CorMapa* mapaCores) {
 void limparBuffer() {
     char c;
     while ((c = getchar()) != '\n' && c != EOF);
-};
+}
 
 void atacar(territorios* atacante, territorios* defensor){
     if (strcmp(atacante->cor_Exercito, defensor->cor_Exercito) == 0) {
@@ -91,6 +91,20 @@ void atacar(territorios* atacante, territorios* defensor){
         }
     } else {
         printf("\nEmpate! Nenhuma tropa é perdida.\n");
+    }
+}
+
+void eliminarTerritorio(territorios* lista_Territorios, int* totalTerritorios, int indice) {
+    printf("O território %s foi conquistado e removido do jogo!\n", lista_Territorios[indice].nome);
+    // Remove o território do jogo
+    for (int i = indice; i < (*totalTerritorios) - 1; i++) {
+        lista_Territorios[i] = lista_Territorios[i + 1];
+    }
+    (*totalTerritorios)--; // Reduz o número total de territórios
+
+    if (*totalTerritorios == 1) {
+        printf("O território %s é o único restante e foi declarado vencedor!\n", lista_Territorios[0].nome);
+        exit(0); // Encerra o programa
     }
 }
 
@@ -164,20 +178,11 @@ int main() {
         contador++;
     }
 
-    int opcao;
+        int opcao;
 
-    do {
+        do {
 
-        if (totalTerritorios == 0) {
-            printf("Nenhum território cadastrado. Encerrando o jogo.\n");
-            liberarMemoria(lista_Territorios);
-            return 1;
-        } if(totalTerritorios == 1){
-            printf("O território %s é o único restante e foi declarado vencedor!\n", lista_Territorios[0].nome);
-            liberarMemoria(lista_Territorios);
-            return 0;
-        }
-
+        
 
         // Exibe o mapa do mundo atual
         printf("========================================\n");
@@ -205,38 +210,43 @@ int main() {
 
         
 
-            //ESCOLHA DE EQUIPES PARA O JOGO
+         //ESCOLHA DE EQUIPES PARA O JOGO
         if (opcao == 1) {
 
-            printf("\nEscolha os territórios para o jogo:\n");
-            int escolha1, escolha2;
-            printf("Escolha o território do jogador 1 (1 a %d): ", totalTerritorios);
-            scanf("%d", &escolha1);
-            printf("Escolha o território do jogador 2 (1 a %d): ", totalTerritorios);
-            scanf("%d", &escolha2);
-            limparBuffer();
+        printf("\nEscolha os territórios para o jogo:\n");
+        int escolha1, escolha2;
+        printf("Escolha o território do jogador 1 (1 a %d): ", totalTerritorios);
+        scanf("%d", &escolha1);
+        printf("Escolha o território do jogador 2 (1 a %d): ", totalTerritorios);
+        scanf("%d", &escolha2);
+        limparBuffer();
 
-            //validação das escolhas
-            if (escolha1 < 1 || escolha1 > totalTerritorios || escolha2 < 1 || escolha2 > totalTerritorios) {
-                printf("Escolha inválida. Encerrando o jogo.\n");
-                free(lista_Territorios); // Libera a memória alocada para os territórios
-                return 1;
-            }
+        //validação das escolhas
+         if (escolha1 < 1 || escolha1 > totalTerritorios || escolha2 < 1 || escolha2 > totalTerritorios) {
+            printf("Escolha inválida. Encerrando o jogo.\n");
+            free(lista_Territorios); // Libera a memória alocada para os territórios
+            return 1;
+        }
         
 
         atacar(&lista_Territorios[escolha1 - 1], &lista_Territorios[escolha2 - 1]);
-       
-}
+
+        // --- NOVO: Verifica quem morreu após o ataque e elimina ---
+        // Verifica o defensor
+        if (lista_Territorios[escolha2 - 1].num_Tropas <= 0) {
+            eliminarTerritorio(lista_Territorios, &totalTerritorios, escolha2 - 1);
+        } 
+        // Verifica o atacante
+        else if (lista_Territorios[escolha1 - 1].num_Tropas <= 0) {
+            eliminarTerritorio(lista_Territorios, &totalTerritorios, escolha1 - 1);
+        }
+
+    } // Fim do if (opcao == 1)
+         
+
     } while (opcao != 0); // Loop infinito para permitir múltiplas batalhas
 
-        
-liberarMemoria(lista_Territorios);
+    liberarMemoria(lista_Territorios);
 
 return 0;
-
 }
-
- 
-
-
-
