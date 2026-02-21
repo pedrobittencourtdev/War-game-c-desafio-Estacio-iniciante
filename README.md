@@ -23,6 +23,7 @@ O projeto foi criado para consolidar conceitos avançados de programação estru
 * **Sistema de ataque:** Simula um ataque, utilizando números aleatórios, como se fosses dados de uma batalha.
 * **Atualização de dados:** o território defensor deve mudar de dono (cor do exército) se o atacante vencer, e suas tropas devem ser atualizadas.
 * **Exibição pós-ataque:** o sistema deve exibir os dados atualizados dos territórios após cada ataque.
+* **INTERFACE INTUITIVA**
 
 ## 💻 Como executar:
 

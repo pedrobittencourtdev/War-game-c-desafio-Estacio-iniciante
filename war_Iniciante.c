@@ -6,6 +6,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <windows.h>
+#include <unistd.h>
 
 
 
@@ -18,6 +20,16 @@
 #define ANSI_COLOR_MAGENTA "\x1b[1;35m"
 #define ANSI_COLOR_CYAN    "\x1b[1;36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
+
+//DEfinição de cores de fundo (Background)
+#define ANSI_BG_RED     "\x1b[41m"
+#define ANSI_BG_GREEN   "\x1b[42m"
+#define ANSI_BG_YELLOW  "\x1b[43m"
+#define ANSI_BG_BLUE    "\x1b[44m"
+#define ANSI_BG_MAGENTA "\x1b[45m"
+#define ANSI_BG_CYAN    "\x1b[46m"
+#define ANSI_BG_RESET   "\x1b[0m"
+
 
 //---Definição da estrutura Território---//
 
@@ -71,7 +83,7 @@ void limparBuffer() {
 
 void atacar(territorios* atacante, territorios* defensor){
     if (strcmp(atacante->cor_Exercito, defensor->cor_Exercito) == 0) {
-        printf("Não é possível atacar um território do mesmo exército.\n");
+        printf(ANSI_COLOR_RED"Não é possível atacar um território do mesmo exército.\n" ANSI_COLOR_RESET);
         return;
     }
 
@@ -80,31 +92,48 @@ void atacar(territorios* atacante, territorios* defensor){
     int dadosDefensor = (rand() % 6) + 1; // Gera um número aleatório entre 1 e 6
 
     printf("\nRESULTADO DA BATALHA:\n");
+// Loop para criar a animação rápida
+for (int i = 0; i < 15; i++) {
+    int simulaAtaque = (rand() % 6) + 1;
+    int simulaDefesa = (rand() % 6) + 1;
+    
+    // O \r no começo faz o texto sobrescrever a si mesmo na mesma linha
+    printf("\rGirando... Atacante: [%d] | Defensor: [%d]", simulaAtaque, simulaDefesa);
+    
+    // Força o terminal a mostrar o texto imediatamente
+    fflush(stdout); 
+    
+    // Pausa bem rápida de 100 milissegundos (0.2 segundo)
+    Sleep(200); 
+}
+
+// Quando o loop acaba, limpamos a linha da animação com espaços e imprimimos o resultado real
+printf("\r                                                  \r");
 
     printf("Atacante (%s) rolou: %d\n", atacante->nome, dadosAtacante);
     printf("Defensor (%s) rolou: %d\n", defensor->nome, dadosDefensor);
 
     if(dadosAtacante > dadosDefensor){
-        printf("\nO atacante venceu a batalha!\n");
+        printf(ANSI_COLOR_GREEN"\nO atacante venceu a batalha!\n" ANSI_COLOR_RESET);
         defensor->num_Tropas -= 1; // O defensor perde uma tropa
         atacante->num_Tropas += 1; // O atacante ganha uma tropa
         if (defensor->num_Tropas <= 0) {
-            printf("\nO território %s foi conquistado por %s!\n", defensor->nome, atacante->cor_Exercito);
+            printf(ANSI_COLOR_GREEN"\nO território %s foi conquistado por %s!\n" ANSI_COLOR_RESET, defensor->nome, atacante->cor_Exercito);
         }
     } else if(dadosAtacante < dadosDefensor){
-        printf("\nO defensor venceu a batalha!\n");
+        printf(ANSI_COLOR_GREEN"\nO defensor venceu a batalha!\n" ANSI_COLOR_RESET);
         atacante->num_Tropas -= 1; // O atacante perde uma tropa
         defensor->num_Tropas += 1; // O defensor ganha uma tropa
         if (atacante->num_Tropas <= 0) {
-            printf("\nO território %s foi conquistado pelo exército %s!\n", atacante->nome, defensor->cor_Exercito);
+            printf(ANSI_COLOR_GREEN"\nO território %s foi conquistado pelo exército %s!\n" ANSI_COLOR_RESET, atacante->nome, defensor->cor_Exercito);
         }
     } else {
-        printf("\nEmpate! Nenhuma tropa é perdida.\n");
+        printf(ANSI_COLOR_YELLOW"\nEmpate! Nenhuma tropa é perdida.\n" ANSI_COLOR_RESET);
     }
 }
 
 void eliminarTerritorio(territorios* lista_Territorios, int* totalTerritorios, int indice) {
-    printf("O território %s foi conquistado e removido do jogo!\n", lista_Territorios[indice].nome);
+    printf(ANSI_COLOR_RED"O território %s foi conquistado e removido do jogo!\n", lista_Territorios[indice].nome, ANSI_COLOR_RESET);
     // Remove o território do jogo
     for (int i = indice; i < (*totalTerritorios) - 1; i++) {
         lista_Territorios[i] = lista_Territorios[i + 1];
@@ -112,10 +141,13 @@ void eliminarTerritorio(territorios* lista_Territorios, int* totalTerritorios, i
     (*totalTerritorios)--; // Reduz o número total de territórios
 
     if (*totalTerritorios == 1) {
-        printf("O território %s é o único restante e foi declarado vencedor!\n", lista_Territorios[0].nome);
-        printf("=============================\n");
-        printf("        %s%s%s WINNER!        \n", obterCodigoCor(lista_Territorios[0].cor_Exercito, mapaCores), lista_Territorios[0].cor_Exercito, ANSI_COLOR_RESET);
-        printf("=============================\n");
+        printf(ANSI_COLOR_GREEN"O território %s é o único restante e foi declarado vencedor!\n" ANSI_COLOR_RESET, lista_Territorios[0].nome);
+        printf("\n");
+        printf("========================");
+        printf("\n");
+        printf(ANSI_BG_GREEN"      VERDE WINNER!    " ANSI_BG_RESET);
+        printf("\n");
+        printf("=======================");
             exit(0); // Encerra o programa
     }
 }
@@ -125,9 +157,8 @@ void eliminarTerritorio(territorios* lista_Territorios, int* totalTerritorios, i
 
 void liberarMemoria(territorios* mapa) {
     free(mapa);
-    printf("\nMemoria liberada. Ate a proxima!\n");
+    printf(ANSI_COLOR_GREEN"\nMemoria liberada. Ate a proxima!\n" ANSI_COLOR_RESET);
 }
-
 
 
 //---Função principal---//
@@ -136,10 +167,9 @@ int main() {
 
     srand(time(NULL)); // Inicializa a semente para números aleatórios
 
-  
-    territorios *t= NULL;
-    territorios *lista_Territorios;
 
+    territorios *t= NULL; 
+    territorios *lista_Territorios;
     int totalTerritorios;
 
     // Tabela de referência para as cores
@@ -152,16 +182,18 @@ int main() {
         {"ciano",    ANSI_COLOR_CYAN}
     };
 
-        do {
-            printf("======Cadastro do jogo WAR!======\n");
-
-            printf("Quantos territórios deseja cadastrar? (Minimo de 2): ");
-            scanf("%d", &totalTerritorios);
-            limparBuffer(); // Limpa o buffer após ler o número
-                if (totalTerritorios < 2) {
-                    printf("\nPor favor, cadastre pelo menos 2 territórios para iniciar o jogo.\n");
-                }
-        } while (totalTerritorios < 2);
+    do {
+        printf("\n");
+        printf(ANSI_BG_GREEN"Cadastro do jogo WAR!"ANSI_BG_RESET);
+        printf("\n\n");
+        printf("Quantos territórios deseja cadastrar? (Minimo de 2): ");
+        scanf("%d", &totalTerritorios);
+        limparBuffer(); // Limpa o buffer após ler o número
+            if (totalTerritorios < 2) {
+                printf(ANSI_COLOR_RED "\nPor favor, cadastre pelo menos 2 territórios para iniciar o jogo.\n" ANSI_COLOR_RESET);
+                printf("\n");
+            }
+    } while (totalTerritorios < 2);
 
     // Aloca memória para a lista de territórios
 
@@ -169,7 +201,7 @@ int main() {
 
     // Verifica se a alocação foi bem-sucedida
     if (lista_Territorios == NULL) {
-        printf("Erro ao alocar memória para os territórios.\n");
+        printf(ANSI_COLOR_RED"Erro ao alocar memória para os territórios.\n" ANSI_COLOR_RESET);
         return 1;
     }
 
@@ -190,7 +222,9 @@ int main() {
 
         printf("Digite o número de tropas: ");
         scanf("%d", &t ->num_Tropas);
-        printf("\nTerritório cadastrado com sucesso!\n\n");
+        printf("Aguarde um momento enquanto processamos o cadastro...\n");
+        Sleep(700); // Pausa de 0.7 segundos para criar uma sensação de processamento
+        printf(ANSI_COLOR_GREEN"\nTerritório cadastrado com sucesso!\n\n" ANSI_COLOR_RESET);
         limparBuffer();
         contador++;
     }
@@ -198,34 +232,31 @@ int main() {
         int opcao;
 
         do {
-
-        
-
+        printf("\n");
+        printf(ANSI_COLOR_YELLOW"Processando o mapa do mundo atual...\n" ANSI_COLOR_RESET);
+            Sleep(1000); // Pausa de 1 segundo para criar uma sensação de processamento
         // Exibe o mapa do mundo atual
-        printf("========================================\n");
-        printf("          MAPA DO MUNDO ATUAL     \n");
-        printf("========================================\n");
+        printf(ANSI_COLOR_BLUE"========================================\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_BLUE"          MAPA DO MUNDO ATUAL     \n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_BLUE"========================================\n" ANSI_COLOR_RESET);
 
         // Exibe os territórios cadastrados
         for (int i = 0; i < totalTerritorios; i++) {
         t = &lista_Territorios[i];
 
-        
         const char*cor_formatacao = obterCodigoCor(t->cor_Exercito, mapaCores); // Obtém o código de formatação para a cor do exército
 
+            // Exibe o território com a formatação de cor
             printf("%d - %s (Exercito %s%s%s, Tropas: %d)\n", i + 1,  
-                t->nome, cor_formatacao, 
-                t->cor_Exercito, ANSI_COLOR_RESET, t->num_Tropas);
+                t->nome, cor_formatacao, t->cor_Exercito, ANSI_COLOR_RESET, t->num_Tropas);
         }
-
+        // Exibe as opções de batalha
         printf("\n======TELA DE BATALHA======\n");
-        printf("\n1 - Realizar ataque\n");
-        printf("0 - Sair\n");
+        printf(ANSI_COLOR_BLUE"\n1 - Realizar ataque\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_RED"0 - Sair\n"ANSI_COLOR_RESET);
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
         limparBuffer();
-
-        
 
          //ESCOLHA DE EQUIPES PARA O JOGO
         if (opcao == 1) {
@@ -240,7 +271,7 @@ int main() {
 
         //validação das escolhas
          if (escolha1 < 1 || escolha1 > totalTerritorios || escolha2 < 1 || escolha2 > totalTerritorios) {
-            printf("Escolha inválida. Encerrando o jogo.\n");
+            printf(ANSI_COLOR_RED"Escolha inválida. Encerrando o jogo.\n" ANSI_COLOR_RESET);
             free(lista_Territorios); // Libera a memória alocada para os territórios
             return 1;
         }
