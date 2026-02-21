@@ -33,6 +33,15 @@ typedef struct {
     char *codigo;
 } CorMapa;
 
+CorMapa mapaCores[] = {
+        {"vermelho", ANSI_COLOR_RED},
+        {"verde",    ANSI_COLOR_GREEN},
+        {"azul",     ANSI_COLOR_BLUE},
+        {"amarelo",  ANSI_COLOR_YELLOW},
+        {"magenta",  ANSI_COLOR_MAGENTA},
+        {"ciano",    ANSI_COLOR_CYAN}
+    };// Tabela de referência para as cores
+
 const char* obterCodigoCor(char* corExército, CorMapa* mapaCores) {
     char corTemp[20];
     strcpy(corTemp, corExército);
@@ -104,7 +113,10 @@ void eliminarTerritorio(territorios* lista_Territorios, int* totalTerritorios, i
 
     if (*totalTerritorios == 1) {
         printf("O território %s é o único restante e foi declarado vencedor!\n", lista_Territorios[0].nome);
-        exit(0); // Encerra o programa
+        printf("=============================\n");
+        printf("        %s%s%s WINNER!        \n", obterCodigoCor(lista_Territorios[0].cor_Exercito, mapaCores), lista_Territorios[0].cor_Exercito, ANSI_COLOR_RESET);
+        printf("=============================\n");
+            exit(0); // Encerra o programa
     }
 }
 
@@ -140,11 +152,16 @@ int main() {
         {"ciano",    ANSI_COLOR_CYAN}
     };
 
-    printf("======Cadastro do jogo WAR!======\n");
+        do {
+            printf("======Cadastro do jogo WAR!======\n");
 
-    printf("Quantos territórios deseja cadastrar? ");
-    scanf("%d", &totalTerritorios);
-    limparBuffer(); // Limpa o buffer após ler o número
+            printf("Quantos territórios deseja cadastrar? (Minimo de 2): ");
+            scanf("%d", &totalTerritorios);
+            limparBuffer(); // Limpa o buffer após ler o número
+                if (totalTerritorios < 2) {
+                    printf("\nPor favor, cadastre pelo menos 2 territórios para iniciar o jogo.\n");
+                }
+        } while (totalTerritorios < 2);
 
     // Aloca memória para a lista de territórios
 
