@@ -8,6 +8,7 @@
 #include <time.h>
 #include <windows.h>
 #include <unistd.h>
+#include <locale.h>
 
 // Definições de cores de texto (Foreground)
 #define ANSI_COLOR_RED     "\x1b[1;31m"
@@ -150,8 +151,6 @@ void eliminarTerritorio(territorios* lista_Territorios, int* totalTerritorios, i
 }
 
 
-
-
 void liberarMemoria(territorios* mapa) {
     free(mapa);
     printf(ANSI_COLOR_GREEN"\nMemoria liberada. Ate a proxima!\n" ANSI_COLOR_RESET);
@@ -161,6 +160,8 @@ void liberarMemoria(territorios* mapa) {
 //---Função principal---//
 
 int main() {
+
+    setLocale(LC_ALL, "Portuguese"); // Configura a localidade para Português
 
     srand(time(NULL)); // Inicializa a semente para números aleatórios
 
