@@ -161,7 +161,8 @@ void liberarMemoria(territorios* mapa) {
 
 int main() {
 
-setlocale(LC_ALL, "Portuguese"); // Configura a localidade para Português
+    setlocale(LC_ALL, "Portuguese"); // Configura a localidade para Português
+    SetConsoleOutputCP(CP_UTF8); // Configura a saída do console para UTF-8 para suportar caracteres acentuados
 
     srand(time(NULL)); // Inicializa a semente para números aleatórios
 
