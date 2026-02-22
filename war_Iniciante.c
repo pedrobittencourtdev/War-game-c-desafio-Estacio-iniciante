@@ -9,9 +9,6 @@
 #include <windows.h>
 #include <unistd.h>
 
-
-
-
 // Definições de cores de texto (Foreground)
 #define ANSI_COLOR_RED     "\x1b[1;31m"
 #define ANSI_COLOR_GREEN   "\x1b[1;32m"
@@ -118,14 +115,14 @@ printf("\r                                                  \r");
         defensor->num_Tropas -= 1; // O defensor perde uma tropa
         atacante->num_Tropas += 1; // O atacante ganha uma tropa
         if (defensor->num_Tropas <= 0) {
-            printf(ANSI_COLOR_GREEN"\nO território %s foi conquistado por %s!\n" ANSI_COLOR_RESET, defensor->nome, atacante->cor_Exercito);
+            printf(ANSI_COLOR_GREEN"\nO território %s (%s) foi conquistado por %s (%s)!\n" ANSI_COLOR_RESET, defensor->nome, defensor->cor_Exercito, atacante->cor_Exercito, atacante->nome);
         }
     } else if(dadosAtacante < dadosDefensor){
         printf(ANSI_COLOR_GREEN"\nO defensor venceu a batalha!\n" ANSI_COLOR_RESET);
         atacante->num_Tropas -= 1; // O atacante perde uma tropa
         defensor->num_Tropas += 1; // O defensor ganha uma tropa
         if (atacante->num_Tropas <= 0) {
-            printf(ANSI_COLOR_GREEN"\nO território %s foi conquistado pelo exército %s!\n" ANSI_COLOR_RESET, atacante->nome, defensor->cor_Exercito);
+            printf(ANSI_COLOR_GREEN"\nO território %s (%s) foi conquistado pelo exército %s (%s)!\n" ANSI_COLOR_RESET, atacante->nome, atacante->cor_Exercito, defensor->cor_Exercito, defensor->nome);
         }
     } else {
         printf(ANSI_COLOR_YELLOW"\nEmpate! Nenhuma tropa é perdida.\n" ANSI_COLOR_RESET);
@@ -133,7 +130,7 @@ printf("\r                                                  \r");
 }
 
 void eliminarTerritorio(territorios* lista_Territorios, int* totalTerritorios, int indice) {
-    printf(ANSI_COLOR_RED"O território %s foi conquistado e removido do jogo!\n", lista_Territorios[indice].nome, ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED"\nO território %s (%s) perdeu todas tropas e foi removido do jogo!\n" ANSI_COLOR_RESET, lista_Territorios[indice].nome, lista_Territorios[indice].cor_Exercito);
     // Remove o território do jogo
     for (int i = indice; i < (*totalTerritorios) - 1; i++) {
         lista_Territorios[i] = lista_Territorios[i + 1];
@@ -141,13 +138,13 @@ void eliminarTerritorio(territorios* lista_Territorios, int* totalTerritorios, i
     (*totalTerritorios)--; // Reduz o número total de territórios
 
     if (*totalTerritorios == 1) {
-        printf(ANSI_COLOR_GREEN"O território %s é o único restante e foi declarado vencedor!\n" ANSI_COLOR_RESET, lista_Territorios[0].nome);
+        printf(ANSI_COLOR_GREEN"O território %s (%s) é o único restante e foi declarado vencedor!\n" ANSI_COLOR_RESET, lista_Territorios[0].nome, lista_Territorios[0].cor_Exercito);
         printf("\n");
-        printf("========================");
+        printf("=======================================");
         printf("\n");
-        printf(ANSI_BG_GREEN"      VERDE WINNER!    " ANSI_BG_RESET);
+        printf(ANSI_BG_GREEN"     Exército %s (%s) WINNER!    " ANSI_BG_RESET, lista_Territorios[0].cor_Exercito, lista_Territorios[0].nome);
         printf("\n");
-        printf("=======================");
+        printf("=======================================");
             exit(0); // Encerra o programa
     }
 }
@@ -222,7 +219,8 @@ int main() {
 
         printf("Digite o número de tropas: ");
         scanf("%d", &t ->num_Tropas);
-        printf("Aguarde um momento enquanto processamos o cadastro...\n");
+        printf("\n");
+        printf(ANSI_COLOR_YELLOW"Aguarde um momento enquanto processamos o cadastro...\n" ANSI_COLOR_RESET);
         Sleep(700); // Pausa de 0.7 segundos para criar uma sensação de processamento
         printf(ANSI_COLOR_GREEN"\nTerritório cadastrado com sucesso!\n\n" ANSI_COLOR_RESET);
         limparBuffer();
@@ -247,11 +245,13 @@ int main() {
         const char*cor_formatacao = obterCodigoCor(t->cor_Exercito, mapaCores); // Obtém o código de formatação para a cor do exército
 
             // Exibe o território com a formatação de cor
-            printf("%d - %s (Exercito %s%s%s, Tropas: %d)\n", i + 1,  
+            printf("%d - %s (Exército %s%s%s, Tropas: %d)\n", i + 1,  
                 t->nome, cor_formatacao, t->cor_Exercito, ANSI_COLOR_RESET, t->num_Tropas);
         }
         // Exibe as opções de batalha
-        printf("\n======TELA DE BATALHA======\n");
+        printf("\n");
+        printf(ANSI_BG_BLUE"INICIAR CONFRONTO" ANSI_BG_RESET);
+        printf("\n");
         printf(ANSI_COLOR_BLUE"\n1 - Realizar ataque\n" ANSI_COLOR_RESET);
         printf(ANSI_COLOR_RED"0 - Sair\n"ANSI_COLOR_RESET);
         printf("Escolha uma opção: ");
