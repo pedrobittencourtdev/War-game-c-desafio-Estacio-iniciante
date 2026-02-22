@@ -161,7 +161,7 @@ void liberarMemoria(territorios* mapa) {
 
 int main() {
 
-    setLocale(LC_ALL, "Portuguese"); // Configura a localidade para Português
+setlocale(LC_ALL, "Portuguese"); // Configura a localidade para Português
 
     srand(time(NULL)); // Inicializa a semente para números aleatórios
 
