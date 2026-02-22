@@ -21,7 +21,7 @@ O projeto foi criado para consolidar conceitos avançados de programação estru
 * **Listar Territórios:** Exibe os dados cadastrados com formatação ANSI dinâmica (cores no terminal).
 * **Tratamento de Dados:** Remoção automática do `\n` e limpeza de buffer para evitar erros de leitura.
 * **Sistema de ataque:** Simula um ataque, utilizando números aleatórios, como se fosses dados de uma batalha.
-* **Atualização de dados:** o território defensor deve mudar de dono (cor do exército) se o atacante vencer, e suas tropas devem ser atualizadas.
+* **Atualização de dados:** o território que vencer a rodada recebe uma tropa a mais, o perdedor perde uma tropa, caso chegue a 0 tropas o território é eliminado, o último território restante vence o jogo.
 * **Exibição pós-ataque:** o sistema deve exibir os dados atualizados dos territórios após cada ataque.
 * **INTERFACE INTUITIVA**
 
