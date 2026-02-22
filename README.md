@@ -39,11 +39,11 @@ Se você quiser testar este sistema na sua máquina, siga os passos abaixo:
 
 2. **Entre no terminal e na pasta:**
    ```bash
-      cd War-game-c-desafio-Estacio-iniciante
+   cd War-game-c-desafio-Estacio-iniciante
 
 3. **Compile o código:**
    ```bash
-      gcc war_Iniciante.c -o sistema
+   gcc war_Iniciante.c -o sistema
 
 4. **Execute:**
    ```bash
