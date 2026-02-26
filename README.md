@@ -24,6 +24,7 @@ O projeto foi criado para consolidar conceitos avançados de programação estru
 * **Atualização de dados:** o território que vencer a rodada recebe uma tropa a mais, o perdedor perde uma tropa, caso chegue a 0 tropas o território é eliminado, o último território restante vence o jogo.
 * **Exibição pós-ataque:** o sistema deve exibir os dados atualizados dos territórios após cada ataque.
 * **INTERFACE INTUITIVA**
+* **Missões**
 
 ## 💻 Como executar:
 
