@@ -73,8 +73,8 @@ int verificarMissao(territorios* territorio, char* vetorMissoes[], int totalTerr
 
 // Vetor de missões para os territórios
 char* vetorMissoes[2] = {
-    "Seja o último território restante no jogo.",
-    "Conquiste um território."
+    ANSI_COLOR_CYAN"Seja o último território restante no jogo." ANSI_COLOR_RESET,
+    ANSI_COLOR_CYAN"Conquiste um território." ANSI_COLOR_RESET
 };
 
 
@@ -130,6 +130,16 @@ int main() {
             limparBuffer();
             getchar();
                 break;
+            case 3:
+                printf(ANSI_COLOR_CYAN"\nAJUDA:\n" ANSI_COLOR_RESET);
+                printf(ANSI_COLOR_CYAN"SOBRE O JOGO: O jogo consiste em conquistar territórios e cumprir missões para vencer o jogo.\n" ANSI_COLOR_RESET);
+                printf(ANSI_COLOR_CYAN"1. Realizar ataque: Permite escolher um território atacante e um defensor para iniciar uma batalha.\n" ANSI_COLOR_RESET);
+                printf(ANSI_COLOR_CYAN"2. Verificar missões: Exibe a missão de cada território vivo no mapa para que os jogadores possam acompanhar seus objetivos.\n" ANSI_COLOR_RESET);
+                printf(ANSI_COLOR_CYAN"0. Sair: Encerra o jogo e libera a memória alocada.\n" ANSI_COLOR_RESET);
+                printf(ANSI_COLOR_YELLOW "\nPressione ENTER para voltar ao menu..." ANSI_COLOR_RESET);
+                limparBuffer();
+                getchar();
+                break;
             case 0:
                 printf(ANSI_COLOR_YELLOW"\nEncerrando o jogo. Obrigado por jogar!\n" ANSI_COLOR_RESET);
                 break;
@@ -139,10 +149,23 @@ int main() {
         }
         // Verifica se o jogador escolheu iniciar um confronto ou sair, e executa a ação correspondente
         if(opcao == 1){
-            lerEscolhas(&escolha1, &escolha2, totalTerritorios);
+            int ataqueValido = 0;
+            // Loop para garantir que o jogador escolha um território atacante válido (com tropas)
+            do {
+            // Loop que insiste até o jogador escolher exércitos diferentes
+                lerEscolhas(&escolha1, &escolha2, totalTerritorios);
+                
+                // Verifica se as cores são iguais ANTES de ir para a batalha
+                if (strcmp(lista_Territorios[escolha1 - 1].nome, lista_Territorios[escolha2 - 1].nome) == 0) {
+                    printf(ANSI_COLOR_RED "\nErro: Não é possível atacar um território do seu próprio exército!\n" ANSI_COLOR_RESET);
+                    printf(ANSI_COLOR_YELLOW "Por favor, escolha novamente.\n" ANSI_COLOR_RESET);
+                } else {
+                    ataqueValido = 1; // Exércitos diferentes! Pode sair do loop.
+                }
+            } while (ataqueValido == 0);
+
             atacar(&lista_Territorios[ escolha1 - 1], &lista_Territorios[escolha2 - 1]);
             
-            // --- Verifica quem morreu após o ataque e elimina ---
             // --- Verifica quem morreu após o ataque e elimina ---
             if (lista_Territorios[escolha2 - 1].num_Tropas <= 0) {
                 eliminarTerritorio(lista_Territorios, &totalTerritorios, escolha2 - 1);
@@ -151,7 +174,7 @@ int main() {
                 eliminarTerritorio(lista_Territorios, &totalTerritorios, escolha1 - 1);
             }
 
-            // --- VERIFICAÇÕES DE VITÓRIA (CORRIGIDO) ---
+            // --- VERIFICAÇÕES DE VITÓRIA --- //
             int missaoCumprida = 0;
             
             // Varre TODOS os territórios vivos para ver se alguém completou a missão
@@ -205,23 +228,74 @@ void quantidadeTerritorios(int* totalTerritorios) {
 
 // Função para cadastrar os territórios, suas cores e número de tropas.
 void cadastrarTerritorios(territorios* lista_Territorios, int totalTerritorios){
+
+    char* continentes[6] = {"América do Norte", "América do Sul", "Europa", "África", "Ásia", "Oceania"}; // Lista de continentes disponíveis para os territórios.
+
+    char* paises[6][5] = {
+        {"Estados Unidos", "Canadá", "México", "Cuba", "Panamá"},
+        {"Brasil", "Argentina", "Colômbia", "Peru", "Chile"},
+        {"França", "Alemanha", "Itália", "Espanha", "Reino Unido"},
+        {"Nigéria", "Egito", "África do Sul", "Quênia", "Marrocos"},
+        {"China", "Índia", "Japão", "Rússia", "Arábia Saudita"},
+        {"Austrália", "Nova Zelândia", "Fiji", "Samoa", "Tonga"}
+    };// Lista de países disponíveis para os territórios, organizada por continente.
+
+    char* nomesCores[6] = {"vermelho", "verde", "azul", "amarelo", "magenta", "ciano"}; // Lista de cores disponíveis para os exércitos.
+    char* codigoCores[6] = {ANSI_COLOR_RED, ANSI_COLOR_GREEN, ANSI_COLOR_BLUE, ANSI_COLOR_YELLOW, ANSI_COLOR_MAGENTA, ANSI_COLOR_CYAN}; // Lista de códigos de formatação de cores correspondentes às cores disponíveis para os exércitos.
+
+
     int contador = 0;
 
     while (contador < totalTerritorios){
+        territorios* t = &lista_Territorios[contador]; 
 
-        territorios* t = &lista_Territorios[contador];
+        // Exibe as opções de continentes, países e cores para o jogador escolher
+        int opcoesContinente, opcoesPais, opcoesCor;
         
-        printf("\nDigite o nome do território: ");
-        fgets(t ->nome, 30, stdin);
+        do {
+            printf("\nEscolha o continente:\n");
+            for (int i = 0; i < 6; i++) {
+                printf("%d - %s\n", i + 1, continentes[i]);
+            }
+            printf("Opção: ");
+            scanf("%d", &opcoesContinente);
+            limparBuffer(); // Limpa o buffer após ler a opção
+            if (opcoesContinente < 1 || opcoesContinente > 6) {
+                printf(ANSI_COLOR_RED"\nOpção inválida. Por favor, escolha um continente válido.\n" ANSI_COLOR_RESET);
+            }
+        }while (opcoesContinente < 1 || opcoesContinente > 6);
 
-        printf("Digite a cor do exército: ");
-        fgets(t ->cor_Exercito, 10, stdin);
-       
-        t ->nome[strcspn(t ->nome, "\n")] = '\0'; // Remove o caractere de nova linha
-        t ->cor_Exercito[strcspn(t ->cor_Exercito, "\n")] = '\0'; // Remove o caractere de nova linha
+        do {
+            printf("\nEscolha o país:\n");
+            for (int i = 0; i < 5; i++){
+                printf("%d - %s\n", i + 1, paises[opcoesContinente - 1][i]);
+            }
+            printf("Opção: ");
+            scanf("%d", &opcoesPais);
+            limparBuffer(); // Limpa o buffer após ler a opção
+            if (opcoesPais < 1 || opcoesPais > 5) {
+                printf(ANSI_COLOR_RED"\nOpção inválida. Por favor, escolha um país válido.\n" ANSI_COLOR_RESET);
+            }
+        }while (opcoesPais < 1 || opcoesPais > 5);
 
-        printf("Digite o número de tropas: ");
-        scanf("%d", &t ->num_Tropas);
+        strcpy (t->nome, paises[opcoesContinente - 1][opcoesPais - 1]); // Atribui o nome do país escolhido ao território
+
+        do {
+            printf("\nEscolha a cor do exército:\n");
+            for (int i = 0; i < 6; i++) {
+                printf("%d - %s%s%s\n", i + 1, codigoCores[i], nomesCores[i], ANSI_COLOR_RESET);
+            }
+            printf("Opção: ");
+            scanf("%d", &opcoesCor);
+            limparBuffer(); // Limpa o buffer após ler a opção
+            if (opcoesCor < 1 || opcoesCor > 6) {
+                printf(ANSI_COLOR_RED"\nOpção inválida. Por favor, escolha uma cor válida.\n" ANSI_COLOR_RESET);
+            }
+        }while (opcoesCor < 1 || opcoesCor > 6);
+        strcpy(t->cor_Exercito, nomesCores[opcoesCor - 1]); // Atribui a cor do exército escolhida ao território
+        t -> num_Tropas = 2 + (rand() % 2); // Atribui um número aleatório de tropas (entre 2 e 3) ao território
+
+
         t-> conquistas = 0;
         t->missao = (char*)malloc(100 * sizeof(char)); 
         atribuirMissao(t->missao, vetorMissoes, 2);
@@ -229,7 +303,6 @@ void cadastrarTerritorios(territorios* lista_Territorios, int totalTerritorios){
         printf(ANSI_COLOR_YELLOW"Aguarde um momento enquanto processamos o cadastro...\n" ANSI_COLOR_RESET);
         Sleep(700); // Pausa de 0.7 segundos para criar uma sensação de processamento
         printf(ANSI_COLOR_GREEN"\nTerritório cadastrado com sucesso!\n\n" ANSI_COLOR_RESET);
-        limparBuffer();
         contador++;
     }
 
@@ -266,13 +339,14 @@ void menuBatalha (territorios* lista_Territorios, int totalTerritorios, int* opc
         printf("\n");
         printf(ANSI_COLOR_BLUE"\n1 - Realizar ataque\n" ANSI_COLOR_RESET);
         printf(ANSI_COLOR_BLUE"2 - Verificar missões\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_BLUE"3 - AJUDA\n" ANSI_COLOR_RESET);
         printf(ANSI_COLOR_RED"0 - Sair\n"ANSI_COLOR_RESET);
         printf("Escolha uma opção: ");
         *opcao = -1; // Inicializa a opção com um valor inválido para garantir que o loop de validação seja executado
-        while (*opcao != 1 && *opcao != 2 && *opcao != 0) {
+        while (*opcao != 1 && *opcao != 2 &&  *opcao != 3 && *opcao != 0) {
             scanf("%d", opcao);
             limparBuffer(); // Limpa o buffer após ler a opção
-            if (*opcao != 1 && *opcao != 2 && *opcao != 0) {
+            if (*opcao != 1 && *opcao != 2 && *opcao != 3 && *opcao != 0) {
                 printf(ANSI_COLOR_RED"\nOpção inválida. Por favor, escolha uma opção válida.\n" ANSI_COLOR_RESET);
                 printf("Escolha uma opção: ");
             }
@@ -282,26 +356,23 @@ void menuBatalha (territorios* lista_Territorios, int totalTerritorios, int* opc
 // Função para ler as escolhas dos jogadores para o confronto entre os territórios, com validação para garantir que as escolhas sejam válidas.
 void lerEscolhas(int* escolha1, int* escolha2, int totalTerritorios) {
     printf("\nEscolha os territórios para o confronto:\n");
-    printf("Escolha o território do ATACANTE (1 a %d): ", totalTerritorios);
-    scanf("%d", escolha1);
-    printf("Escolha o território do DEFENSOR (1 a %d): ", totalTerritorios);
-    scanf("%d", escolha2);
-    limparBuffer();
+    do{
+        printf("Escolha o território do ATACANTE (1 a %d): ", totalTerritorios);
+        scanf("%d", escolha1);
+        printf("Escolha o território do DEFENSOR (1 a %d): ", totalTerritorios);
+        scanf("%d", escolha2);
+        limparBuffer();
 
-    // Validação das escolhas
-    if (*escolha1 < 1 || *escolha1 > totalTerritorios || *escolha2 < 1 || *escolha2 > totalTerritorios) {
-        printf(ANSI_COLOR_RED"Escolha inválida. Encerrando o jogo.\n" ANSI_COLOR_RESET);
-        exit(1); // Encerra o programa com código de erro
-    }
+        // Validação das escolhas
+        if (*escolha1 < 1 || *escolha1 > totalTerritorios || *escolha2 < 1 || *escolha2 > totalTerritorios) {
+        printf(ANSI_COLOR_RED"Escolha inválida. Encerrando o jogo, por favor digite novamente.\n" ANSI_COLOR_RESET);
+         }
+    } while (*escolha1 < 1 || *escolha1 > totalTerritorios || *escolha2 < 1 || *escolha2 > totalTerritorios);
 }
 
 // Função para simular o ataque entre os territórios escolhidos.
 void atacar(territorios* atacante, territorios* defensor){
-    if (strcmp(atacante->cor_Exercito, defensor->cor_Exercito) == 0) {
-        printf(ANSI_COLOR_RED"Não é possível atacar um território do mesmo exército.\n" ANSI_COLOR_RESET);
-        return;
-    }
-
+    
     //simulação de ataque usando dados
     int dadosAtacante = (rand() % 6) + 1; // Gera um número aleatório entre 1 e 6
     int dadosDefensor = (rand() % 6) + 1; // Gera um número aleatório entre 1 e 6
@@ -373,8 +444,9 @@ int vencedor(territorios* lista_Territorios, int *totalTerritorios) {
         printf("\n");
         printf("=======================================");
         liberarMemoria (lista_Territorios, *totalTerritorios, vetorMissoes, 2); // Libera a memória antes de encerrar o programa
-            exit(0); // Encerra o programa
+        return 1; // Retorna 1 indicando que há um vencedor
     }
+    return 0; // Retorna 0 indicando que ainda não há um vencedor
 }
 
 // Função para liberar a memória alocada para os territórios e exibir uma mensagem de despedida.

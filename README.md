@@ -44,7 +44,7 @@ Se você quiser testar este sistema na sua máquina, siga os passos abaixo:
 
 3. **Compile o código:**
    ```bash
-   gcc war_Iniciante.c -o sistema
+   gcc war.c -o sistema
 
 4. **Execute:**
    ```bash
