@@ -44,11 +44,11 @@ Se você quiser testar este sistema na sua máquina, siga os passos abaixo:
 
 3. **Compile o código:**
    ```bash
-   gcc war.c -o sistema
+   gcc war.c -o war
 
 4. **Execute:**
    ```bash
-   ./sistema
+   .\war.exe
 
 
 
