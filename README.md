@@ -51,4 +51,8 @@ Se você quiser testar este sistema na sua máquina, siga os passos abaixo:
    .\war.exe
 
 
+## 👨‍💻 Autor
+Desenvolvido por Pedro Bittencourt como parte da jornada de aprendizado em Engenharia de Software.
+Sinta-se à vontade para clonar, testar e sugerir melhorias!
+
 
