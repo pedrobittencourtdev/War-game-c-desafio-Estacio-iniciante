@@ -1,4 +1,4 @@
-# 🌍 WAR! - Gerenciamento de Territórios
+# 🌍 WAR! 
 
 Este é um projeto desenvolvido em **Linguagem C** para o gerenciamento simplificado de territórios do jogo WAR. O sistema permite o cadastro técnico e a listagem visual dos dados através de uma interface via terminal colorida.
 
@@ -54,5 +54,6 @@ Se você quiser testar este sistema na sua máquina, siga os passos abaixo:
 ## 👨‍💻 Autor
 Desenvolvido por Pedro Bittencourt como parte da jornada de aprendizado em Engenharia de Software.
 Sinta-se à vontade para clonar, testar e sugerir melhorias!
+
 
 
