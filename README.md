@@ -1,4 +1,4 @@
-# 🌍 WAR! - Gerenciamento de Territórios
+# 🌍 WAR! 
 
 Este é um projeto desenvolvido em **Linguagem C** para o gerenciamento simplificado de territórios do jogo WAR. O sistema permite o cadastro técnico e a listagem visual dos dados através de uma interface via terminal colorida.
 
@@ -21,9 +21,10 @@ O projeto foi criado para consolidar conceitos avançados de programação estru
 * **Listar Territórios:** Exibe os dados cadastrados com formatação ANSI dinâmica (cores no terminal).
 * **Tratamento de Dados:** Remoção automática do `\n` e limpeza de buffer para evitar erros de leitura.
 * **Sistema de ataque:** Simula um ataque, utilizando números aleatórios, como se fosses dados de uma batalha.
-* **Atualização de dados:** o território defensor deve mudar de dono (cor do exército) se o atacante vencer, e suas tropas devem ser atualizadas.
+* **Atualização de dados:** o território que vencer a rodada recebe uma tropa a mais, o perdedor perde uma tropa, caso chegue a 0 tropas o território é eliminado, o último território restante vence o jogo.
 * **Exibição pós-ataque:** o sistema deve exibir os dados atualizados dos territórios após cada ataque.
 * **INTERFACE INTUITIVA**
+* **Missões**
 
 ## 💻 Como executar:
 
@@ -39,15 +40,20 @@ Se você quiser testar este sistema na sua máquina, siga os passos abaixo:
 
 2. **Entre no terminal e na pasta:**
    ```bash
-      cd War-game-c-desafio-Estacio-iniciante
+   cd War-game-c-desafio-Estacio-iniciante
 
 3. **Compile o código:**
    ```bash
-      gcc war_Iniciante.c -o sistema
+   gcc war.c -o war
 
 4. **Execute:**
    ```bash
-   ./sistema
+   .\war.exe
+
+
+## 👨‍💻 Autor
+Desenvolvido por Pedro Bittencourt como parte da jornada de aprendizado em Engenharia de Software.
+Sinta-se à vontade para clonar, testar e sugerir melhorias!
 
 
 
